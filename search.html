@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Guitar Inventory Management</title>
+    <style>
+        body {
+            background-color: #f7e4c2; /* Light beige background */
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Navbar Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: #f7e4c2;
+        }
+
+        /* Title */
+        header h1 {
+            color: #d76b33;
+            font-size: 30px;
+        }
+
+        /* Navigation Links */
+        nav a {
+            margin-left: 25px;
+            text-decoration: none; /* gets rid of the underlining */
+            color: black;
+            font-weight: bold;
+            font-size: 40px;
+        }
+
+        /* Hover Effect */
+        nav a:hover {
+            color: #d76b33; /* Same orange as the title */
+        }
+
+        .container {
+    width: 50%; /* Adjusts width to control form size */
+    max-width: 600px; /* Prevents form from being too wide */
+    margin-left: 50px; /* Left-aligns the form */
+}
+
+/* Each row (label + input) */
+.form-group {
+    display: flex; /* Align label and input on the same line */
+    align-items: center; /* Centers them vertically */
+    margin-bottom: 15px; /* Adds spacing between rows */
+}
+
+/* Label styling */
+label {
+    width: 120px; /* Fixed width for labels */
+    font-weight: bold;
+    font-size: 18px;
+    margin-right: 10px; /* Space between label and input */
+    text-align: right; /* Align text to the right */
+}
+
+/* Input styling */
+input {
+    flex: 1; /* Takes remaining space */
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+}
+
+/* Button styling */
+button {
+    background-color: #d0a97f;
+    border: none;
+    padding: 12px 25px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block; /* Places button on its own line */
+    margin-top: 10px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+button:hover {
+    background-color: #b28b64;
+}
+
+/* Table Styling */
+table {
+    width: 100%; /* Makes the table full-width of its container */
+    border-collapse: collapse; /* Removes gaps between table cells */
+    margin-top: 20px;
+    background-color: white; /* White background */
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow */
+    table-layout: fixed;
+}
+
+/* Header Row */
+thead {
+    background-color: #d76b33; /* Orange background */
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Table Header & Cell Styling */
+th, td {
+    padding: 12px; /* Adds spacing inside cells */
+    text-align: left; /* Align text to the left */
+    border-bottom: 1px solid #ccc; /* Adds a subtle line between rows */
+}
+
+/* Alternate Row Colors */
+tbody tr:nth-child(odd) {
+    background-color: #f7e4c2; /* Light beige */
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f2d3b1; /* Slightly darker beige */
+}
+
+/* Hover Effect */
+tbody tr:hover {
+    background-color: #e0c5a5; /* Highlight row on hover */
+    transition: background-color 0.3s ease-in-out;
+}
+</style>
+</head>
+<body>
+    <header>
+        <h1>Guitar Inventory<br>Management</h1>
+        <nav>
+            <a href="about.html">About</a>
+            <a href="add.html">Add</a>
+            <a href="search.html">Search</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="form-group">
+            <label for="builder">Builder:</label>
+            <input type="text" id="builder">
+        </div>
+    
+        <div class="form-group">
+            <label for="model">Model:</label>
+            <input type="text" id="model">
+        </div>
+    
+        <div class="form-group">
+            <label for="type">Type:</label>
+            <input type="text" id="type">
+        </div>
+    
+        <div class="form-group">
+            <label for="backWood">Back wood:</label>
+            <input type="text" id="backWood">
+        </div>
+    
+        <div class="form-group">
+            <label for="topWood">Top wood:</label>
+            <input type="text" id="topWood">
+        </div>
+    
+        <button type="button" onclick="searchGuitars()">Search</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Serial Number</th>
+                <th>Builder</th>
+                <th>Model</th>
+                <th>Type</th>
+                <th>Back Wood</th>
+                <th>Top Wood</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody id="searchResults"></tbody> <!-- ✅ Ensure this exists -->
+    </table>
+    
+
+    <script>
+        const guitars = [
+            { serialNumber: "001", builder: "Fender", model: "Stratocaster", type: "Electric", backWood: "Alder", topWood: "Maple", price: 1200 },
+            { serialNumber: "002", builder: "Gibson", model: "Les Paul", type: "Electric", backWood: "Mahogany", topWood: "Maple", price: 2500 },
+            { serialNumber: "003", builder: "Taylor", model: "314ce", type: "Acoustic", backWood: "Mahogany", topWood: "Spruce", price: 2000 },
+            { serialNumber: "004", builder: "Martin", model: "D-28", type: "Acoustic", backWood: "Rosewood", topWood: "Spruce", price: 2800 },
+            { serialNumber: "005", builder: "PRS", model: "Custom 24", type: "Electric", backWood: "Mahogany", topWood: "Maple", price: 3500 }
+        ];
+
+        function searchGuitars() {
+            // retrieve inputs
+            const builder = document.getElementById('builder').value.toLowerCase();
+            const model = document.getElementById('model').value.toLowerCase();
+            const type = document.getElementById('type').value.toLowerCase();
+            const backWood = document.getElementById('backWood').value.toLowerCase();
+            const topWood = document.getElementById('topWood').value.toLowerCase();
+
+            const results = guitars.filter(guitar => {
+                const builderMatches = !builder || guitar.builder.toLowerCase().includes(builder);
+                const modelMatches = !model || guitar.model.toLowerCase().includes(model);
+                const typeMatches = !type || guitar.type.toLowerCase().includes(type);
+                const backwoodMatches = !backWood || guitar.backWood.toLowerCase().includes(backWood);
+                const topWoodMatches = !topWood || guitar.topWood.toLowerCase().includes(backWood);
+            
+                return builderMatches && modelMatches && typeMatches && backwoodMatches && topWoodMatches;
+            });
+
+            displayResults(results);
+        }
+
+        function displayResults(results) {
+            console.log(results);
+            const resultsBody = document.getElementById('searchResults');
+            resultsBody.innerHTML = '';
+
+            if (results.length == 0) {
+                resultsBody.innerHTML = '<tr><td colspan="6">No guitars found.</td></tr>';
+                return;
+            }
+
+            results.forEach(guitar => {
+                resultsBody.innerHTML += `
+                    <tr>
+                        <td>${guitar.serialNumber}</td>
+                        <td>${guitar.builder}</td>
+                        <td>${guitar.model}</td>
+                        <td>${guitar.type}</td>
+                        <td>${guitar.backWood}</td>
+                        <td>${guitar.topWood}</td>
+                        <td>$${guitar.price}</td>
+                    </tr>`;
+            });
+        }
+    </script>
+</body>
+</html>
